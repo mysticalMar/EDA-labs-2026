@@ -1,19 +1,11 @@
 #ifndef LVO_H_INCLUDED
 #define LVO_H_INCLUDED
 #include <string.h>
+#include "LSOBB.h"
 int LVO_Altas = 0, LVO_total_Alta = 0, LVO_corr_Alta = 0, LVO_max_Alta = 0,
     LVO_Bajas = 0, LVO_total_Baja = 0, LVO_corr_Baja = 0, LVO_max_Baja = 0;
 float LVO_medio_Alta = 0, LVO_medio_Baja = 0;
 
-typedef struct
-{
-    int DNI;
-    char nombreyapellido[50];
-    char domicilio[80];
-    int cp;
-    int mesa;
-    int circuito;
-} Padron;
 
 int LVO_cant=0;
     typedef struct nodo{
@@ -149,7 +141,7 @@ return c;
         int i=0, c=0;
         l.cur=l.acc;
         if (LVO_cant==0){
-            printf("La lista de prestadores esta vacia. \n");
+            printf("La lista esta vacia. \n");
         }
         else{
             while (l.cur!=NULL&&i<LVO_cant){
