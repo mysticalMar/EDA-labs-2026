@@ -46,15 +46,7 @@ void LSOBB_Localizar(Padron l[], int dni, int *exito, int *pos, int opcion) {
      li=0;
      ls=CantElem-1;
 	 while ((li<ls)){
-      t=((li+ls)/2);
- printf("Limite inferior: %d \n", li);
-       printf("Limite superior: %d \n", ls);
-
-      printf("Testigo: %d \n", t);
-      printf("Elemento: %d \n", l[t].DNI);
-
-
-
+      t=(((li+ls)/2));
 
      if (l[t].DNI<dni) {
             li = t+1;
@@ -64,13 +56,13 @@ void LSOBB_Localizar(Padron l[], int dni, int *exito, int *pos, int opcion) {
 		 }
     }
 
-    if (ls==li) {
-                *exito= 0; //localización no exitosa
-                *pos=li;
+    if (l[li].DNI==dni) {
+               *exito=1;
+               *pos=li;
             }
             else {
-            *exito=1; //localizacion exitosa
-            *pos=t;
+           *exito= 0;
+           *pos=li;
             }
 }
 void LSOBB_Alta(Padron l[], Padron ElementoAlta, int *exito, int opcion) {
