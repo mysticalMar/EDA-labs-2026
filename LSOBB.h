@@ -39,7 +39,7 @@ float LSOBB_medio_Alta=0, LSOBB_medio_Baja=0, LSOBB_medio_local=0;
 //en la lista secuencial la funci´ on de costo ser´ a la cantidad de
 //corrimientos y cada corrimiento de elemento tiene costo 1 (uno).
 //limite inferior inclusivo, lımite superior inclusivo, testigo a izquierda y segmento mas grande a la izquierda.
-
+int Costos[MAXELECTORES];
 void LSOBB_Localizar(Padron l[], int dni, int *exito, int *pos, int opcion) {
      int li,ls, t;
      float m;
@@ -47,7 +47,9 @@ void LSOBB_Localizar(Padron l[], int dni, int *exito, int *pos, int opcion) {
      ls=CantElem-1;
 	 while ((li<ls)){
       t=(((li+ls)/2));
-
+      if (opcion==3){
+        Costos[t]=1;
+      }
      if (l[t].DNI<dni) {
             li = t+1;
      }
