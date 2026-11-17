@@ -1,8 +1,36 @@
+//Grupo 33 Romano Mariana, Masucci Fiona
 #include <stdio.h>
 #include <stdlib.h>
 #include "RS.h"
 #include "RAC.h"
 #include "RAL.h"
+
+
+//ANALISIS DE RESULTADOS: RAL
+//Maximo de evocacion exitosa: 1964
+//Medio de evocacion exitosa: 559.779785
+//Maximo de evocacion no exitosa: 1998
+//Medio de evocacion no exitosa: 1580.086670
+//viendo los valores, el costo es muy alto en las evocaciones,revisa casi toda la estructura en el peor caso.
+//Sin embargo, estos resultados son razonables, ya que una vez que se llena, cada evoacion no exitosa analiza
+//bloques contiguos de celdas ocupadas y libres hasta llegar a una celda virgen.
+//Como comclusión, los valores son esperables para un RAL de tal densidad, demostrando poca eficiencia para el volumen de datos.
+
+//ANALISIS DE RESULTADOS: RAC
+//Maximo de evocacion exitosa: 64
+//Medio de evocacion exitosa: 29.463908
+//Maximo de evocacion no exitosa: 68
+//Medio de evocacion no exitosa:  56.088737
+//En el RAC podemos observar una disminución drástica respecto al RAL.
+//Esto se debe a la manera de localizar, mostrando que esta es mucho más eficiente que la anterior
+
+//ANALISIS DE RESULTADOS: RS
+//Maximo de evocacion exitosa:  19
+//Medio de evocacion exitosa: 5.208736
+//Maximo de evocacion no exitosa:  19
+//Medio de evocacion no exitosa:  7.238675
+//El rebalse separado presenta el menor costo para ambos resultados, permitiendo llegar a la conclusión de que la estructura más eficiente
+//respecto a celdas consultadas es el Rebalse Separado.
 
 int lectura_operaciones(Padron RAL[], RAC *tablaRAC, RS *tablaRS) {
     Padron aux;
@@ -95,6 +123,25 @@ int main()
         switch (opcion) {
             case 1:  // Lectura y comparación de operaciones
                 lectura_operaciones(RAL, &tablaRAC, &tablaRS);
+                //RAL
+                printf("\n--- REBALSE ABIERTO LINEAL (RAL) ---\n");
+                printf("Maximo de evocacion exitosa: %d \n",RAL_max_E);
+                printf("Medio de evocacion exitosa: %f \n",(float)RAL_t_E/RAL_evocar_E);
+                printf("Maximo de evocacion no exitosa: %d \n",RAL_max_F);
+                printf("Medio de evocacion no exitosa: %f \n", (float)RAL_t_F/RAL_evocar_F);
+                //RAC
+                printf("\n--- REBALSE ABIERTO CUADRATICO (RAC) ---\n");
+                printf("Maximo de evocacion exitosa: %d \n", maxEvocExitosa_RAC);
+                printf("Medio de evocacion exitosa: %f \n", (float)totalEvocExitosa_RAC/cantEvocExitosa_RAC);
+                printf("Maximo de evocacion no exitosa: %d \n", maxEvocNoExitosa_RAC);
+                printf("Medio de evocacion no exitosa: %f \n", (float)totalEvocNoExitosa_RAC/cantEvocNoExitosa_RAC);
+                //RS
+                printf("\n--- REBALSE SEPARADO (RS) ---\n");
+                printf("Maximo de evocacion exitosa: %d \n", maxEvocExitosa_RS);
+                printf("Medio de evocacion exitosa: %f \n", (float)totalEvocExitosa_RS/cantEvocExitosa_RS);
+                printf("Maximo de evocacion no exitosa: %d \n", maxEvocNoExitosa_RS);
+                printf("Medio de evocacion no exitosa: %f \n", (float)totalEvocNoExitosa_RS/cantEvocNoExitosa_RS);
+
                 break;
 
             case 2:  // Mostrar RAL
@@ -116,30 +163,5 @@ int main()
                 break;
         }
     } while (opcion != 5);
-    //ANALISIS DE RESULTADOS: RAL
-//Maximo de evocacion exitosa: 121
-//Medio de evocacion exitosa: 4
-//Maximo de evocacion no exitosa: 134
-//Medio de evocacion no exitosa: 107
-//Viendo los valores de la evocación exitosa, contrastan considerablemente con los de las evocaciones no exitosas,
-//para las cuales el valor máximo es de 134 y el medio es de 107.
-//Sin embargo, estos resultados son razonables, ya que, una vez que la estructura se encuentre más llena,
-//cada evocación no exitosa analizará varias veces 134 celdas, es decir, toda la estructura.
-//Entonces, como conclusión, se puede afirmar que los valores obtenidos son razonables respecto a la estructura, y su forma de localización.
-
-//ANALISIS DE RESULTADOS: RAC
-//Costo maximo de evocacion exitosa en RAC: 60
-//Costo medio de evocacion exitosa en RAC: 2.15
-//Costo maximo de evocacion no exitosa en RAC: 131
-//Costo medio de evocacion no exitosa en RAC: 12.14
-//En el RAC podemos observar una disminución considerable respecto al RAL, debido a la manera de localizar, mostrando que esta es mucho más eficiente que la anterior.
-
-//ANALISIS DE RESULTADOS: RS
-//Costo maximo de evocacion exitosa en RS: 7
-//Costo medio de evocacion exitosa en RS: 1.58
-//Costo maximo de evocacion no exitosa en RS: 4
-//Costo medio de evocacion no exitosa en RS: 0.76
-//El rebalse separado presenta el menor costo para ambos resultados, permitiendo llegar a la conclusión de que la estructura más eficiente
-//respecto a celdas consultadas es el Rebalse Separado.
     return 0;
 }

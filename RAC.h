@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "RS.h"
-/// M : N / ρ --> 2000 / 0,83 --> M = 2409,6 , primo mas cercano 2411.
+// M : N / ρ --> 2000 / 0,83 --> M = 2409,6 , primo mas cercano 2411.
 #define MRAC 2411
 
-///Variables Globales Costos
+//Variables Globales Costos
 int maxEvocExitosa_RAC = 0, maxEvocNoExitosa_RAC = 0;
 int totalEvocExitosa_RAC = 0, totalEvocNoExitosa_RAC = 0;
 int cantEvocExitosa_RAC = 0, cantEvocNoExitosa_RAC = 0;
@@ -33,13 +33,13 @@ typedef struct {
   } RAC;
 
      int CantElem=0;
-    void init_RAC(RAC *tabla){
+void init_RAC(RAC *tabla){
      int i;
     for(i=0; i<MRAC; i++){
-    tabla->celda[i].estado = '*';///Inicializamos todas las celdas como virgenes
+    tabla->celda[i].estado = '*';//Inicializamos todas las celdas como virgenes
   }
    tabla->cant = 0;
- }
+}
 
 int confirmaRAC(CeldaRAC l[], int pos, PadronRAC elemento) {
     return l[pos].estado == 'O' &&
@@ -53,46 +53,35 @@ int confirmaRAC(CeldaRAC l[], int pos, PadronRAC elemento) {
 
 
   int Localizar_RAC(RAC *tabla, int dni, int *pos, int *costo) {
-    *pos = hashing(dni, MRAC);
-    int i = *pos;
-    int aux = -1;
+    int i = hashing(dni, MRAC);
+    int aux = -1;       // primera celda libre '+' encontrada
     int contador = 0;
     int k = 1;
-    int flag=0;
 
-    *costo = 0;
+    *costo = 1;
 
-    while (contador < MRAC && tabla->celda[i].estado != '*'&&
-           tabla->celda[i].padron.DNI != dni) {
+    while (contador<MRAC&&
+           tabla->celda[i].estado!='*'&&
+           !(tabla->celda[i].estado=='O'&&tabla->celda[i].padron.DNI==dni)) {
 
-
-        if (tabla->celda[i].estado == '+'&&flag==0) {
+        if (tabla->celda[i].estado=='+'&&aux==-1)
             aux = i;
-            flag=1;
-        }
-        // Calculamos la siguiente posición usando exploración cuadrática
+
         i = (i + k) % MRAC;
         k++;
         contador++;
         (*costo)++;
     }
 
-    // Caso 1: Prestador encontrado
-    if (tabla->celda[i].padron.DNI == dni&&tabla->celda[i].estado=='O') {
+    // Encontrado: solo si está ocupada Y el DNI coincide
+    if (tabla->celda[i].estado=='O'&&tabla->celda[i].padron.DNI==dni) {
         *pos = i;
-        return 1;  // Encontrado
+        return 1;
     }
-    else {
-    // Caso 2: No encontrado, pero se puede dar de alta
-    if (tabla->celda[i].estado == '+' && aux != -1) {
-       *pos = aux;
-       } else {
-       *pos = i;
-           }
 
+    // No encontrado
+    *pos = (aux != -1) ? aux : i;
     return 0;
-    }
-
 }
 int Alta_RAC(RAC *tabla, PadronRAC padron, int *costo) {
     int pos = 0;
@@ -125,6 +114,7 @@ int Baja_RAC(RAC *tabla, PadronRAC padron, int *costo){
     }
     return 0;
 }
+
 int Evocar_RAC(RAC *tabla, int dni, int *costo, PadronRAC *c) {
     int pos = 0;
      if (tabla->cant == 0) {
@@ -173,7 +163,7 @@ void MostrarEstructura_RAC(RAC *tabla) {
     }
 
     // Mostrar las celdas si no está vacía
-    for (i = 0; i < MRAC && totalElectoresMostrados < MRAL ; i++) {
+    for (i = 0; i < MRAC && totalElectoresMostrados < MRAC ; i++) {
         // Mostrar estado de la celda
 
         if (tabla->celda[i].estado == '*') {

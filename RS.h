@@ -1,10 +1,11 @@
+
 #ifndef RS_H_INCLUDED
 #define RS_H_INCLUDED
 #include <string.h>
 #define MAXELECTORES 110
 #define PAUSA_ELECTORES 5
-#define cant_RS 1242 // MRS ρ=1.61.
-///Variables globales de costo
+#define cant_RS 1243 // MRS ρ=1.61.
+//Variables globales de costo
 int maxEvocExitosa_RS = 0, maxEvocNoExitosa_RS = 0;
 int totalEvocExitosa_RS = 0, totalEvocNoExitosa_RS = 0;
 int cantEvocExitosa_RS = 0, cantEvocNoExitosa_RS = 0;
@@ -66,7 +67,7 @@ int confirmaRS(PadronRS a, PadronRS b) {
 
 int Localizar_RS(RS *tabla, int DNI, CeldaRS **resultado, int *costo, int *pos){
     *pos=hashing(DNI, cant_RS);
-    int c=0;
+    int c=1;
     CeldaRS *actual = tabla->a[*pos];
     while (actual!=NULL) {
         c++;
@@ -78,6 +79,7 @@ int Localizar_RS(RS *tabla, int DNI, CeldaRS **resultado, int *costo, int *pos){
         actual=actual->psig;
     }
     *costo = c;
+    *resultado=NULL;
     return 0;
 }
 
@@ -96,24 +98,29 @@ int Alta_RS(RS *tabla, PadronRS padron){
 }
 
 
-int Baja_RS(RS *tabla, PadronRS padron){
-    int pos=hashing(padron.DNI, cant_RS);
-    CeldaRS *actual=tabla->a[pos], *anterior=NULL;
-    while (actual!=NULL) {
-        if (actual->datos.DNI==padron.DNI) {
-            if (!confirmaRS(actual->datos, padron))
-                return 0;  // el DNI está pero la nupla no coincide
-            if (anterior==NULL) tabla->a[pos]=actual->psig;
-            else anterior->psig=actual->psig;
-            free(actual);
-            tabla->cant--;
-            return 1;
-        }
-        anterior=actual;
-        actual=actual->psig;
+int Baja_RS(RS *tabla, PadronRS p){
+    CeldaRS *existe = NULL;
+    int c = 0, pos;
+
+    if (!Localizar_RS(tabla, p.DNI, &existe, &c, &pos))
+        return 0;
+
+    if (!confirmaRS(existe->datos, p))
+        return 0;
+    CeldaRS *actual = tabla->a[pos], *anterior = NULL;
+    while (actual != existe) {
+        anterior = actual;
+        actual = actual->psig;
     }
-    return 0;
+
+    if (anterior == NULL) tabla->a[pos] = existe->psig;
+    else anterior->psig = existe->psig;
+
+    free(existe);
+    tabla->cant--;
+    return 1;
 }
+
 
    int Evocar_RS(RS *tabla, int DNI, PadronRS *resultado, int *costo){
     CeldaRS *padron=NULL;
@@ -155,15 +162,15 @@ void MostrarPadron(PadronRS p) {
 void MostrarEstructura_RS(RS *rs) {
     int i, contador=0, hayElectores=0;
 
-    for (i=0; i<cant_RS;i++){
-        if (rs->a[i]!=NULL){
-            hayElectores=1; break;
-        }
-    }
     if (!hayElectores){
         printf("La lista de electores esta vacia.\n");
         getchar();
         return;
+    }
+    for (i=0; i<cant_RS;i++){
+        if (rs->a[i]!=NULL){
+            hayElectores=1; break;
+        }
     }
 
     for (i=0; i<cant_RS; i++){
